@@ -39,6 +39,7 @@ class Showcase extends StatefulWidget {
 
   final Widget child;
   final String? title;
+  final String? buttonTitle;
   final String? description;
   final ShapeBorder? shapeBorder;
   final BorderRadius? radius;
@@ -50,6 +51,7 @@ class Showcase extends StatefulWidget {
   final Widget? container;
   final Color showcaseBackgroundColor;
   final Color textColor;
+  final double? passedTooltipWidth;
   final Widget scrollLoadingWidget;
   final bool showArrow;
   final double? height;
@@ -82,6 +84,7 @@ class Showcase extends StatefulWidget {
     required this.key,
     required this.child,
     this.title,
+    this.buttonTitle,
     required this.description,
     this.shapeBorder,
     this.overlayColor = Colors.black45,
@@ -90,6 +93,7 @@ class Showcase extends StatefulWidget {
     this.descTextStyle,
     this.showcaseBackgroundColor = Colors.white,
     this.textColor = Colors.black,
+    this.passedTooltipWidth,
     this.scrollLoadingWidget = const CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation(Colors.white)),
     this.showArrow = true,
@@ -130,6 +134,7 @@ class Showcase extends StatefulWidget {
     required this.height,
     required this.width,
     this.title,
+    this.buttonTitle,
     this.description,
     this.shapeBorder,
     this.overlayColor = Colors.black45,
@@ -137,6 +142,7 @@ class Showcase extends StatefulWidget {
     this.overlayOpacity = 0.75,
     this.titleTextStyle,
     this.descTextStyle,
+    this.passedTooltipWidth,
     this.showcaseBackgroundColor = Colors.white,
     this.textColor = Colors.black,
     this.scrollLoadingWidget = const CircularProgressIndicator(
@@ -339,12 +345,14 @@ class _ShowcaseState extends State<Showcase> {
                   offset: offset,
                   screenSize: screenSize,
                   title: widget.title,
+                  buttonTitle: widget.buttonTitle,
                   description: widget.description,
                   titleTextStyle: widget.titleTextStyle,
                   descTextStyle: widget.descTextStyle,
                   container: widget.container,
                   tooltipColor: widget.showcaseBackgroundColor,
                   textColor: widget.textColor,
+                  passedTooltipWidth: widget.passedTooltipWidth,
                   showArrow: widget.showArrow,
                   contentHeight: widget.height,
                   contentWidth: widget.width,

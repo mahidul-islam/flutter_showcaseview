@@ -23,6 +23,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'showcase_widget.dart';
 
 import 'get_position.dart';
 import 'measure_size.dart';
@@ -34,12 +35,14 @@ class ToolTipWidget extends StatefulWidget {
   final Offset? offset;
   final Size? screenSize;
   final String? title;
+  final String? buttonTitle;
   final String? description;
   final TextStyle? titleTextStyle;
   final TextStyle? descTextStyle;
   final Widget? container;
   final Color? tooltipColor;
   final Color? textColor;
+  final double? passedTooltipWidth;
   final bool showArrow;
   final double? contentHeight;
   final double? contentWidth;
@@ -55,11 +58,13 @@ class ToolTipWidget extends StatefulWidget {
     required this.offset,
     required this.screenSize,
     required this.title,
+    this.buttonTitle,
     required this.description,
     required this.titleTextStyle,
     required this.descTextStyle,
     required this.container,
     required this.tooltipColor,
+    required this.passedTooltipWidth,
     required this.textColor,
     required this.showArrow,
     required this.contentHeight,
@@ -89,7 +94,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
   double tooltipTextPadding = 15;
 
   bool isCloseToTopOrBottom(Offset position) {
-    var height = 120.0;
+    var height = 200.0;
     height = widget.contentHeight ?? height;
     final bottomPosition =
         position.dy + ((widget.position?.getHeight() ?? 0) / 2);
@@ -109,31 +114,35 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
   }
 
   void _getTooltipWidth() {
-    final titleStyle = widget.titleTextStyle ??
-        Theme.of(context)
-            .textTheme
-            .headline6!
-            .merge(TextStyle(color: widget.textColor));
-    final descriptionStyle = widget.descTextStyle ??
-        Theme.of(context)
-            .textTheme
-            .subtitle2!
-            .merge(TextStyle(color: widget.textColor));
-    final titleLength = widget.title == null
-        ? 0
-        : _textSize(widget.title!, titleStyle).width +
-            widget.contentPadding!.right +
-            widget.contentPadding!.left;
-    final descriptionLength = widget.description == null
-        ? 0
-        : (_textSize(widget.description!, descriptionStyle).width +
-            widget.contentPadding!.right +
-            widget.contentPadding!.left);
-    var maxTextWidth = max(titleLength, descriptionLength);
-    if (maxTextWidth > widget.screenSize!.width - tooltipScreenEdgePadding) {
-      tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding;
+    if (widget.passedTooltipWidth != null) {
+      tooltipWidth = widget.passedTooltipWidth!;
     } else {
-      tooltipWidth = maxTextWidth + tooltipTextPadding;
+      final titleStyle = widget.titleTextStyle ??
+          Theme.of(context)
+              .textTheme
+              .headline6!
+              .merge(TextStyle(color: widget.textColor));
+      final descriptionStyle = widget.descTextStyle ??
+          Theme.of(context)
+              .textTheme
+              .subtitle2!
+              .merge(TextStyle(color: widget.textColor));
+      final titleLength = widget.title == null
+          ? 0
+          : _textSize(widget.title!, titleStyle).width +
+              widget.contentPadding!.right +
+              widget.contentPadding!.left;
+      final descriptionLength = widget.description == null
+          ? 0
+          : (_textSize(widget.description!, descriptionStyle).width +
+              widget.contentPadding!.right +
+              widget.contentPadding!.left);
+      var maxTextWidth = max(titleLength, descriptionLength);
+      if (maxTextWidth > widget.screenSize!.width - tooltipScreenEdgePadding) {
+        tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding;
+      } else {
+        tooltipWidth = maxTextWidth + tooltipTextPadding;
+      }
     }
   }
 
@@ -301,50 +310,95 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                       child: ClipRRect(
                         borderRadius:
                             widget.borderRadius ?? BorderRadius.circular(8.0),
-                        child: GestureDetector(
-                          onTap: widget.onTooltipTap,
-                          child: Container(
-                            width: tooltipWidth,
-                            padding: widget.contentPadding,
-                            color: widget.tooltipColor,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  crossAxisAlignment: widget.title != null
-                                      ? CrossAxisAlignment.start
-                                      : CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    widget.title != null
-                                        ? Text(
-                                            widget.title!,
-                                            style: widget.titleTextStyle ??
-                                                Theme.of(context)
-                                                    .textTheme
-                                                    .headline6!
-                                                    .merge(
-                                                      TextStyle(
-                                                        color: widget.textColor,
-                                                      ),
-                                                    ),
-                                          )
-                                        : const SizedBox(),
-                                    Text(
-                                      widget.description!,
-                                      style: widget.descTextStyle ??
-                                          Theme.of(context)
-                                              .textTheme
-                                              .subtitle2!
-                                              .merge(
-                                                TextStyle(
-                                                  color: widget.textColor,
-                                                ),
+                        child: Container(
+                          width: tooltipWidth,
+                          padding: widget.contentPadding,
+                          color: widget.tooltipColor,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: widget.title != null
+                                    ? CrossAxisAlignment.start
+                                    : CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  widget.title != null
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                widget.title!,
+                                                style: widget.titleTextStyle ??
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .headline6!
+                                                        .merge(
+                                                          TextStyle(
+                                                            color: widget
+                                                                .textColor,
+                                                          ),
+                                                        ),
                                               ),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () =>
+                                                    ShowCaseWidget.of(context)
+                                                        .dismiss(),
+                                                child: const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 16),
+                                                    child: Icon(Icons.cut,
+                                                        size: 16,
+                                                        color: Colors.white))),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    widget.description!,
+                                    style: widget.descTextStyle ??
+                                        Theme.of(context)
+                                            .textTheme
+                                            .subtitle2!
+                                            .merge(
+                                              TextStyle(
+                                                color: widget.textColor,
+                                              ),
+                                            ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: widget.onTooltipTap ??
+                                              () => ShowCaseWidget.of(context),
+                                          child: Container(
+                                            color: Colors.white,
+                                            height: 28,
+                                            width: 60,
+                                            child: Center(
+                                              child: Text(
+                                                widget.buttonTitle ?? 'Next',
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontStyle: FontStyle.normal,
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                )
-                              ],
-                            ),
+                                  )
+                                ],
+                              )
+                            ],
                           ),
                         ),
                       ),
