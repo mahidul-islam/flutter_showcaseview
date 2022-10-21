@@ -63,6 +63,7 @@ class Showcase extends StatefulWidget {
   final bool? disableAnimation;
   final EdgeInsets overlayPadding;
   final VoidCallback? onTargetDoubleTap;
+  final VoidCallback? onCrossTap;
   final VoidCallback? onTargetLongPress;
   final BorderRadius? tipBorderRadius;
 
@@ -104,6 +105,7 @@ class Showcase extends StatefulWidget {
     this.contentPadding =
         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
     this.onToolTipClick,
+    this.onCrossTap,
     this.overlayPadding = EdgeInsets.zero,
     this.blurValue,
     this.radius,
@@ -139,6 +141,7 @@ class Showcase extends StatefulWidget {
     this.shapeBorder,
     this.overlayColor = Colors.black45,
     this.radius,
+    this.onCrossTap,
     this.overlayOpacity = 0.75,
     this.titleTextStyle,
     this.descTextStyle,
@@ -357,6 +360,7 @@ class _ShowcaseState extends State<Showcase> {
                   contentHeight: widget.height,
                   contentWidth: widget.width,
                   onTooltipTap: _getOnTooltipTap,
+                  onCrossTap: widget.onCrossTap,
                   contentPadding: widget.contentPadding,
                   disableAnimation: widget.disableAnimation ??
                       showCaseWidgetState.disableAnimation,

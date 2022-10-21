@@ -47,6 +47,7 @@ class ToolTipWidget extends StatefulWidget {
   final double? contentHeight;
   final double? contentWidth;
   final VoidCallback? onTooltipTap;
+  final VoidCallback? onCrossTap;
   final EdgeInsets? contentPadding;
   final Duration animationDuration;
   final bool disableAnimation;
@@ -70,6 +71,7 @@ class ToolTipWidget extends StatefulWidget {
     required this.contentHeight,
     required this.contentWidth,
     required this.onTooltipTap,
+    required this.onCrossTap,
     required this.animationDuration,
     this.contentPadding = const EdgeInsets.symmetric(vertical: 8),
     required this.disableAnimation,
@@ -343,13 +345,15 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                               ),
                                             ),
                                             GestureDetector(
-                                                onTap: () =>
-                                                    ShowCaseWidget.of(context)
-                                                        .dismiss(),
+                                                onTap: () {
+                                                  widget.onCrossTap?.call();
+                                                  ShowCaseWidget.of(context)
+                                                      .dismiss();
+                                                },
                                                 child: const Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 16),
-                                                    child: Icon(Icons.cut,
+                                                    child: Icon(Icons.close,
                                                         size: 16,
                                                         color: Colors.white))),
                                           ],
