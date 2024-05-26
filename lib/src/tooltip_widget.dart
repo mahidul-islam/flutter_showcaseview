@@ -127,7 +127,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
       final descriptionStyle = widget.descTextStyle ??
           Theme.of(context)
               .textTheme
-              .subtitle2!
+              .titleSmall!
               .merge(TextStyle(color: widget.textColor));
       final titleLength = widget.title == null
           ? 0
@@ -365,7 +365,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                     style: widget.descTextStyle ??
                                         Theme.of(context)
                                             .textTheme
-                                            .subtitle2!
+                                            .titleSmall!
                                             .merge(
                                               TextStyle(
                                                 color: widget.textColor,
